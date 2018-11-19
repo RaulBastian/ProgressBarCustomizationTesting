@@ -1,0 +1,16 @@
+C:\Projects\GitHub\SquareProgressBar\SquareProgressBar\bin\Debug\SquareProgressBar.exe.config
+C:\Projects\GitHub\SquareProgressBar\SquareProgressBar\bin\Debug\SquareProgressBar.exe
+C:\Projects\GitHub\SquareProgressBar\SquareProgressBar\bin\Debug\SquareProgressBar.pdb
+C:\Projects\GitHub\SquareProgressBar\SquareProgressBar\obj\Debug\SquareProgressBar.csprojAssemblyReference.cache
+C:\Projects\GitHub\SquareProgressBar\SquareProgressBar\obj\Debug\MainWindow.g.cs
+C:\Projects\GitHub\SquareProgressBar\SquareProgressBar\obj\Debug\App.g.cs
+C:\Projects\GitHub\SquareProgressBar\SquareProgressBar\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Projects\GitHub\SquareProgressBar\SquareProgressBar\obj\Debug\SquareProgressBar_MarkupCompile.cache
+C:\Projects\GitHub\SquareProgressBar\SquareProgressBar\obj\Debug\SquareProgressBar_MarkupCompile.lref
+C:\Projects\GitHub\SquareProgressBar\SquareProgressBar\obj\Debug\MainWindow.baml
+C:\Projects\GitHub\SquareProgressBar\SquareProgressBar\obj\Debug\SquareProgressBar.g.resources
+C:\Projects\GitHub\SquareProgressBar\SquareProgressBar\obj\Debug\SquareProgressBar.Properties.Resources.resources
+C:\Projects\GitHub\SquareProgressBar\SquareProgressBar\obj\Debug\SquareProgressBar.csproj.GenerateResource.cache
+C:\Projects\GitHub\SquareProgressBar\SquareProgressBar\obj\Debug\SquareProgressBar.csproj.CoreCompileInputs.cache
+C:\Projects\GitHub\SquareProgressBar\SquareProgressBar\obj\Debug\SquareProgressBar.exe
+C:\Projects\GitHub\SquareProgressBar\SquareProgressBar\obj\Debug\SquareProgressBar.pdb
