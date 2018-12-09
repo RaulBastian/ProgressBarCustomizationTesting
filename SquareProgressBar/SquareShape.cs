@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -6,17 +7,16 @@ namespace SquareProgressBar
 {
     public class SquareShape : Shape
     {
-        // Side count, could possibly use other side counts for poligons, instead of squares?
-        private const int side_count = 4;
+        private double relativeWidth = 0;
+        private double relativeHeight = 0;
+        private double perimeter;
 
-        public double Value
-        {
-            get
-            {
+
+        public double Value {
+            get {
                 return (double)GetValue(ValueProperty);
             }
-            set
-            {
+            set {
                 SetValue(ValueProperty, value);
             }
         }
@@ -25,17 +25,14 @@ namespace SquareProgressBar
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value),
                                                                            typeof(double),
                                                                            typeof(SquareShape),
-                                                                           new PropertyMetadata(0.0));
+                                                                           new FrameworkPropertyMetadata(0D, FrameworkPropertyMetadataOptions.AffectsRender));
 
 
-        public double MaxValue
-        {
-            get
-            {
+        public double MaxValue {
+            get {
                 return (double)GetValue(MaxValueProperty);
             }
-            set
-            {
+            set {
                 SetValue(MaxValueProperty, value);
             }
         }
@@ -48,10 +45,8 @@ namespace SquareProgressBar
 
 
 
-        protected override Geometry DefiningGeometry
-        {
-            get
-            {
+        protected override Geometry DefiningGeometry {
+            get {
                 return GetShape();
             }
         }
@@ -59,9 +54,12 @@ namespace SquareProgressBar
 
         private Geometry GetShape()
         {
-            var current = GetRelativeValue();
-            var height = GetRelativeHeight();
-            var width = GetRelativeWidth();
+            var current = CurrentPerimeterPosition;
+            var height = RenderSize.Height;
+            var width = RenderSize.Width;
+
+            var relativeHeight = RelativeHeight;
+            var relativeWidth = RelativeWidth;
 
             var side = GetSide(this.Value);
 
@@ -70,9 +68,6 @@ namespace SquareProgressBar
             {
                 context.BeginFigure(new Point(0, 0), false, false);
 
-                context.LineTo(new Point(this.Width, this.Height), true, false);
-
-
                 if (side == 0)
                 {
                     context.LineTo(new Point(0, current), true, false);
@@ -80,7 +75,7 @@ namespace SquareProgressBar
                 else if (side == 1)
                 {
                     context.LineTo(new Point(0, height), true, false);
-                    context.LineTo(new Point(current, height), true, false);
+                    context.LineTo(new Point((current - height), height), true, false);
                 }
                 else if (side == 2)
                 {
@@ -97,44 +92,38 @@ namespace SquareProgressBar
                     context.LineTo(new Point(width, height), true, false);
                     context.LineTo(new Point(width, 0), true, false);
 
-                    var xPosition = width - (current - height - width - height);
+                    var p = Perimeter;
+                    var xPosition = p - current;
+
                     context.LineTo(new Point(xPosition, 0), true, false);
                 }
 
             }
 
             return geometryShape;
-
-            //StreamGeometry geom = new StreamGeometry();
-            //using (StreamGeometryContext gc = geom.Open())
-            //{
-            //    // isFilled = false, isClosed = true
-            //    gc.BeginFigure(new Point(0, 0), false, true);
-            //        gc.LineTo(new Point(this.RenderSize.Width, this.RenderSize.Height), false, false);
-            //    //gc.ArcTo(new Point(75.0, 75.0), new Size(10.0, 20.0), 0.0, false, SweepDirection.Clockwise, true, true);
-            //    //gc.ArcTo(new Point(100.0, 100.0), new Size(10.0, 20.0), 0.0, false, SweepDirection.Clockwise, true, true);
-            //}
-
-            //return geom;
-
         }
 
-
+        /// <summary>
+        /// Returns the current side of the shape 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         private int GetSide(double value)
         {
-            var current = GetRelativeValue();
-            var height = GetRelativeHeight();
-            var width = GetRelativeWidth();
+            var perimterPosition = CurrentPerimeterPosition;
 
-            if (current < height)
+            var renderedHeight = RenderSize.Height;
+            var renderedWidth = RenderSize.Width;
+
+            if (perimterPosition < renderedHeight)
             {
                 return 0;
             }
-            else if(current > height && current < (height + width))
+            else if (perimterPosition > renderedHeight && perimterPosition < (renderedHeight + renderedWidth))
             {
                 return 1;
             }
-            else if (current > (height + width) && current < ((height * 2) + width))
+            else if (perimterPosition > (renderedHeight + renderedWidth) && perimterPosition < ((renderedHeight * 2) + renderedWidth))
             {
                 return 2;
             }
@@ -144,24 +133,68 @@ namespace SquareProgressBar
             }
         }
 
-        private double GetRelativeValue()
-        {
-            var perimeter = (this.Height * 2) + (this.Width * 2);
-            return (this.Value * MaxValue) / perimeter;
+        #region properties
+
+        /// <summary>
+        /// Returns the current perimeter position for the current value
+        /// </summary>
+        private double CurrentPerimeterPosition {
+            get {
+                var currentPerimeterPosition = (this.Value * Perimeter) / MaxValue;
+                Console.WriteLine($"Total perimeter: {perimeter} -- Current perimter position: {currentPerimeterPosition} -- Current value: {Value}");
+                return currentPerimeterPosition;
+            }
         }
 
 
-        private double GetRelativeHeight()
-        {
-          var perimeter = (this.Height * 2) + (this.Width * 2);
-           return (this.Height * MaxValue) / perimeter;
+
+        /// <summary>
+        /// Returns the width relative to the maximum value
+        /// </summary>
+        private double RelativeWidth {
+            get {
+                if (relativeWidth == 0)
+                {
+                    var rWidth = (this.RenderSize.Width * MaxValue) / Perimeter;
+                    relativeWidth = double.IsNaN(rWidth) ? 0 : rWidth;
+                }
+                return relativeHeight;
+            }
         }
 
-        private double GetRelativeWidth()
-        {
-            var perimeter = (this.Height * 2) + (this.Width * 2);
-            return (this.Width * MaxValue) / perimeter;
+
+        /// <summary>
+        /// Returns the height relative to the maximum value
+        /// </summary>
+        private double RelativeHeight {
+            get {
+                if (relativeHeight == 0)
+                {
+                    var rHeight = (this.RenderSize.Height * MaxValue) / Perimeter;
+                    relativeHeight = double.IsNaN(rHeight) ? 0 : rHeight;
+                }
+                return relativeHeight;
+            }
         }
 
+        
+
+        /// <summary>
+        /// Total perimter of the shape
+        /// </summary>
+        private double Perimeter {
+            get {
+                if (perimeter == 0)
+                {
+                    //- We continue to calculate the perimeter until it's larger than 0.
+                    //- RenderSize is cero until it's rendered, so we need to continue calculating while it's cero.
+                    perimeter = (this.RenderSize.Height * 2) + (this.RenderSize.Width * 2);
+                }
+                return perimeter;
+            }
+        }
+
+
+        #endregion
     }
 }
