@@ -13,13 +13,10 @@
                 <Setter.Value>
                     <ControlTemplate>
                         <Grid>
-                            <local:SquareShape 
-                            StrokeThickness="5"
-                            Stroke="Black"
-                            Margin="10"
-                            MaxValue="100"
-                            Value="{Binding Value, RelativeSource={RelativeSource TemplatedParent}}"></local:SquareShape>
-
+                            <local:SquareShape  StrokeThickness="5" Stroke="Black" Margin="10"
+                                                MaxValue="{Binding Maximum, RelativeSource={RelativeSource TemplatedParent}}"
+                                                Value="{Binding Value, RelativeSource={RelativeSource TemplatedParent}}">
+                            </local:SquareShape>
                             <TextBlock Text="{Binding Value, RelativeSource={RelativeSource TemplatedParent}, StringFormat=\{0:0\}}"
 												 Foreground="{TemplateBinding Background}"
 												 VerticalAlignment="Center"
@@ -37,7 +34,8 @@
         <ProgressBar Name="progress" 
                      Width="100"
                      Height="100"
-                     Style="{StaticResource SquaredProgressBar}" Maximum="100"
+                     Maximum="100"
+                     Style="{StaticResource SquaredProgressBar}" 
                      Background="#7f7f7f"
 			        BorderBrush="#ffbd67"></ProgressBar>
     </Grid>

@@ -51,17 +51,17 @@ namespace SquareProgressBar
             }
         }
 
-
+        /// <summary>
+        /// Returns the geometry shape
+        /// </summary>
+        /// <returns></returns>
         private Geometry GetShape()
         {
-            var current = CurrentPerimeterPosition;
+            var currentPerimeterPosition = CurrentPerimeterPosition;
             var height = RenderSize.Height;
             var width = RenderSize.Width;
 
-            var relativeHeight = RelativeHeight;
-            var relativeWidth = RelativeWidth;
-
-            var side = GetSide(this.Value);
+            var side = GetSide();
 
             StreamGeometry geometryShape = new StreamGeometry();
             using (var context = geometryShape.Open())
@@ -70,19 +70,19 @@ namespace SquareProgressBar
 
                 if (side == 0)
                 {
-                    context.LineTo(new Point(0, current), true, false);
+                    context.LineTo(new Point(0, currentPerimeterPosition), true, false);
                 }
                 else if (side == 1)
                 {
                     context.LineTo(new Point(0, height), true, false);
-                    context.LineTo(new Point((current - height), height), true, false);
+                    context.LineTo(new Point((currentPerimeterPosition - height), height), true, false);
                 }
                 else if (side == 2)
                 {
                     context.LineTo(new Point(0, height), true, false);
                     context.LineTo(new Point(width, height), true, false);
 
-                    var yPosition = height - (current - height - width);
+                    var yPosition = height - (currentPerimeterPosition - height - width);
 
                     context.LineTo(new Point(width, yPosition), true, false);
                 }
@@ -93,7 +93,7 @@ namespace SquareProgressBar
                     context.LineTo(new Point(width, 0), true, false);
 
                     var p = Perimeter;
-                    var xPosition = p - current;
+                    var xPosition = p - currentPerimeterPosition;
 
                     context.LineTo(new Point(xPosition, 0), true, false);
                 }
@@ -104,11 +104,13 @@ namespace SquareProgressBar
         }
 
         /// <summary>
-        /// Returns the current side of the shape 
+        /// Returns the side for the current perimeter position.
+        /// 
+        /// Sides go from left = 0, bottom = 1,right = 2, top = 3
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private int GetSide(double value)
+        private int GetSide()
         {
             var perimterPosition = CurrentPerimeterPosition;
 
