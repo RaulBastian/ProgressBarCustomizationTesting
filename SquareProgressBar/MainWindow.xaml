@@ -5,15 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SquareProgressBar"
         mc:Ignorable="d"
-        Padding="200"
+        Padding="20"        
         Title="MainWindow" Height="450" Width="800">
+
     <Window.Resources>
+        <VisualBrush  x:Key="HatchBrush"  TileMode="Tile" Viewport="0,0,10,10"  ViewportUnits="Absolute" Viewbox="0,0,10,10" ViewboxUnits="Absolute">
+            <VisualBrush.Visual>
+                <Canvas>
+                    <Rectangle Fill="Azure" Width="10" Height="10" />
+                    <Path Stroke="Purple" Data="M 0 0 l 10 10" />
+                    <Path Stroke="Purple" Data="M 0 10 l 10 -10" />
+                </Canvas>
+            </VisualBrush.Visual>
+        </VisualBrush>
+
+
         <Style x:Key="SquaredProgressBar" TargetType="ProgressBar">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate>
                         <Grid>
-                            <local:SquareShape  StrokeThickness="5" Stroke="Black" Margin="10"
+                            <local:SquareShape  StrokeThickness="2" Stroke="{StaticResource HatchBrush}"
                                                 MaxValue="{Binding Maximum, RelativeSource={RelativeSource TemplatedParent}}"
                                                 Value="{Binding Value, RelativeSource={RelativeSource TemplatedParent}}">
                             </local:SquareShape>
@@ -31,13 +43,22 @@
     </Window.Resources>
 
     <Grid>
-        <ProgressBar Name="progress" 
-                     Width="100"
-                     Height="100"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="100"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Border Margin="5" Grid.Row="0" Background="{StaticResource HatchBrush}" Height="100" Width="100"></Border>
+        
+        <ProgressBar Name="progress" Grid.Row="1"
+                     Width="200"
+                     Height="200"
                      Maximum="100"
-                     Style="{StaticResource SquaredProgressBar}" 
-                     Background="#7f7f7f"
-			        BorderBrush="#ffbd67"></ProgressBar>
+                     Background="{StaticResource HatchBrush}"
+                     Style="{StaticResource SquaredProgressBar}"></ProgressBar>
+
+        <Border Margin="5" Grid.Row="2" Background="{StaticResource HatchBrush}" Height="100" Width="100"></Border>
     </Grid>
 
     <Window.Triggers>
